@@ -483,10 +483,18 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
                             WindowManager.setTempCurrentImage(imgBranchsMask);
                             IJ.run("Convert to Mask");
                         }
+
+                        
+                        imgBranchsMask.setTitle("Branches_Mask");
+                        imgBranchsMask.setSlice(1);
+                        imgBranchsMask.show();
+                        new WaitForUserDialog("Correct the skeleton mask with paint tools").show();
+                                                        
 // Check if no branches
                         ImageStatistics stats = ImageStatistics.getStatistics(ipBranchsMask, ImageStatistics.MIN_MAX,imgBranchsMask.getCalibration());
-                        new WaitForUserDialog("max = "+stats.max).show();
-                        if (stats.max == 255) { // no branches
+                        
+                        
+                        if (stats.max == 0) { // no branches
 // write skeleton data with zero
                             outputAnayze.write(fileNameWithOutExt + "\t" + (r+1) + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t" +
                                      nbNucleus + "\t" + spheroidFeret + "\t" + spheroidArea + "\t" + prolifArea + "\t" + deltaArea + "\n");
@@ -494,15 +502,12 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
 // write data in diameter file with zero
                             outputDiameter.write(fileNameWithOutExt + "\t" + (r+1) + "\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n");
                             outputDiameter.flush();
+                            imgBranchsMask.changes = false;
                             imgBranchsMask.close();
-                            imgBranchsMask.flush();
+                            imgCrop.changes = false;
+                            imgCrop.close();
                         }
-                        else {
-                            imgBranchsMask.setTitle("Branches_Mask");
-                            imgBranchsMask.setSlice(1);
-                            imgBranchsMask.show();
-                            new WaitForUserDialog("Correct the skeleton mask with paint tools").show();
-                            IJ.run("Convert to Mask");
+                        else {    
 // Save branches mask
                             FileSaver imgMask_save = new FileSaver(imgBranchsMask);
                             if (imgBranchsMask.getNSlices() > 1) imgMask_save.saveAsTiffStack(imgOutDir+fileNameWithOutExt+"_Crop"+r+"_Mask.tif");
@@ -551,9 +556,10 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
                             outputDiameter.write("\n");
                         }
                     }
-                    rm.close();                    
+                    if (rm.getInstance() != null) rm.close();                    
+                    imgOrg.changes = false;
                     imgOrg.close();
-                    imgOrg.flush();
+                    
                 }
             }
            outputAnayze.close();
