@@ -485,8 +485,8 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
                         }
 // Check if no branches
                         ImageStatistics stats = ImageStatistics.getStatistics(ipBranchsMask, ImageStatistics.MIN_MAX,imgBranchsMask.getCalibration());
-                        
-                        if (stats.max != 255) { // no branches
+                        new WaitForUserDialog("max = "+stats.max).show();
+                        if (stats.max == 255) { // no branches
 // write skeleton data with zero
                             outputAnayze.write(fileNameWithOutExt + "\t" + (r+1) + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t" +
                                      nbNucleus + "\t" + spheroidFeret + "\t" + spheroidArea + "\t" + prolifArea + "\t" + deltaArea + "\n");
@@ -494,7 +494,6 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
 // write data in diameter file with zero
                             outputDiameter.write(fileNameWithOutExt + "\t" + (r+1) + "\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n");
                             outputDiameter.flush();
-                            imgBranchsMask.changes = false;
                             imgBranchsMask.close();
                             imgBranchsMask.flush();
                         }
