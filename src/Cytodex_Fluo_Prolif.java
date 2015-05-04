@@ -240,16 +240,7 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
         ImagePlus colorNucleus = imgNucleus.duplicate();
         ImageConverter imgConv = new ImageConverter(colorNucleus);
         imgConv.convertToRGB();
-// run bandpass filter without dialog        
-//        Thread thread = Thread.currentThread();  
-//        thread.setName("Run$_create_image");
-//        String options = "filter_large=5 filter_small=3 suppress=None tolerance=5 autoscale saturate";
-//        String original_name = thread.getName();       
-//	thread.setName("Run$_my_batch_process");
-//        Macro.setOptions(Thread.currentThread(), options);           // select DAPI channel
-//        IJ.runPlugIn(imgNucleus, "ij.plugin.filter.FFTFilter", "");
-//        thread.setName(original_name);
-//        Macro.setOptions(thread, null);
+
 
 // run difference of Gaussians
         double sigma1 = 3, sigma2 = 1;
@@ -494,7 +485,7 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
                         ImageStatistics stats = ImageStatistics.getStatistics(ipBranchsMask, ImageStatistics.MIN_MAX,imgBranchsMask.getCalibration());
                         
                         
-                        if (stats.max == 0) { // no branches
+                        if (stats.max == stats.min ) { // no branches
 // write skeleton data with zero
                             outputAnayze.write(fileNameWithOutExt + "\t" + (r+1) + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t" +
                                      nbNucleus + "\t" + spheroidFeret + "\t" + spheroidArea + "\t" + prolifArea + "\t" + deltaArea + "\n");
