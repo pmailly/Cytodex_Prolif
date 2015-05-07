@@ -480,12 +480,13 @@ public class Cytodex_Fluo_Prolif implements PlugIn {
                         imgBranchsMask.setSlice(1);
                         imgBranchsMask.show();
                         new WaitForUserDialog("Correct the skeleton mask with paint tools").show();
+                        imgBranchsMask.updateAndDraw();
                                                         
 // Check if no branches
-                        ImageStatistics stats = ImageStatistics.getStatistics(ipBranchsMask, ImageStatistics.MIN_MAX,imgBranchsMask.getCalibration());
-                        
+                        ImageStatistics stats = imgBranchsMask.getStatistics();
                         
                         if (stats.max == stats.min ) { // no branches
+                            IJ.log("no branch "+stats.max+","+stats.min);
 // write skeleton data with zero
                             outputAnayze.write(fileNameWithOutExt + "\t" + (r+1) + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t0" + "\t" +
                                      nbNucleus + "\t" + spheroidFeret + "\t" + spheroidArea + "\t" + prolifArea + "\t" + deltaArea + "\n");
